@@ -59,29 +59,27 @@ app.get('/bad', (req, res) => {
 app.post('/webhook', (req, res) => {
     var body = req.body;
 
-
-     var instance = axios.create({
-        baseURL: "",
-        headers: { 'Authorization': 'Bearer NDVkNDUxMGUtNDc3ZC00YTM1LWEzMWYtZmNkMjkwMjU3ZDUyYzU5ZTcwNjMtZGVl' }
-    });
-
     var sparkKeys = {
         roomId: "Y2lzY29zcGFyazovL3VzL1JPT00vZTM3YzE1NjAtNmRjZS0xMWU3LWI2OWItMDk4ODQzNWEzOGRk",
         text: body.text
     };
 
     axios({
-        method : 'post',
+        method: 'post',
         url: 'https://api.ciscospark.com/v1/messages',
         headers: { 'Authorization': 'Bearer NDVkNDUxMGUtNDc3ZC00YTM1LWEzMWYtZmNkMjkwMjU3ZDUyYzU5ZTcwNjMtZGVl' },
-        data : sparkKeys
+        data: sparkKeys
     })
         .then((response) => {
             console.log(response);
         }).catch((error) => {
+            var now = new Date().toString();
+            var error = `${now}: ${req.method}  ${req.url} ${req.ip}`;
+
+            fs.appendFileSync('error.log', error + '\n');
             console.log(error);
-        }); 
- 
+
+        });
 
 });
 
