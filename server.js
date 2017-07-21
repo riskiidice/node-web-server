@@ -59,7 +59,10 @@ app.get('/bad', (req, res) => {
 });
 
 app.post('/webhook', (req, res) => {
-    var body = req.body.hook;
+    var body = {
+        "commits" : req.body.commits,
+        "repository" : req.body.repository,
+    };
     var sparkKeys = {
         roomId: "Y2lzY29zcGFyazovL3VzL1JPT00vZTM3YzE1NjAtNmRjZS0xMWU3LWI2OWItMDk4ODQzNWEzOGRk",
         text: JSON.stringify(body, undefined, 2)
@@ -73,7 +76,7 @@ app.post('/webhook', (req, res) => {
     })
         .then((response) => {
             console.log(response);
-            res.send(req.body.hook);
+            res.send(body);
         }).catch((error) => {
             var now = new Date().toString();
             var log = `${now}: ${req.method}  ${req.url} ${req.ip} ${error}`;
