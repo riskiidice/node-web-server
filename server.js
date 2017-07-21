@@ -17,6 +17,8 @@ app.use((req, res, next) => {
 
     console.log(log);
     fs.appendFileSync('server.log', log + '\n');
+
+
     next();
 });
 
@@ -57,11 +59,10 @@ app.get('/bad', (req, res) => {
 });
 
 app.post('/webhook', (req, res) => {
-    var body = req.body;
-
+    var body = req.body.hook;
     var sparkKeys = {
         roomId: "Y2lzY29zcGFyazovL3VzL1JPT00vZTM3YzE1NjAtNmRjZS0xMWU3LWI2OWItMDk4ODQzNWEzOGRk",
-        text: body.text
+        text: JSON.stringify(body, undefined, 2)
     };
 
     axios({
@@ -72,12 +73,16 @@ app.post('/webhook', (req, res) => {
     })
         .then((response) => {
             console.log(response);
+            res.send(req.body.hook);
         }).catch((error) => {
             var now = new Date().toString();
-            var error = `${now}: ${req.method}  ${req.url} ${req.ip}`;
-
-            fs.appendFileSync('error.log', error + '\n');
+            var log = `${now}: ${req.method}  ${req.url} ${req.ip} ${error}`;
+            fs.appendFileSync('error.log', log + '\n');
             console.log(error);
+
+            res.send({
+                errorMessage: 'Could not sending request'
+            });
 
         });
 
