@@ -61,7 +61,7 @@ app.get('/bad', (req, res) => {
 app.post('/webhook', (req, res) => {
     var body = {
         "commits" : req.body.commits,
-        "repository" : req.body.repository,
+        "repository" : { name: req.body.repository.name, full_name: req.body.repository.full_name } ,
     };
     var sparkKeys = {
         roomId: "Y2lzY29zcGFyazovL3VzL1JPT00vZTM3YzE1NjAtNmRjZS0xMWU3LWI2OWItMDk4ODQzNWEzOGRk",
